@@ -19,7 +19,7 @@ async def on_member_join(member):
 
 @bot.event
 async def on_member_remove(member):
-    channel = bot.get_channel(settingdata['EntranceChannelID'])
+    channel = bot.get_channel(settingdata['ExportChannelID'])
     await channel.send(f'{member} Bye Bye!')
 
 @bot.command()
