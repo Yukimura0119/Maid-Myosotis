@@ -9,6 +9,9 @@ import json
 bot = commands.Bot(command_prefix='$', case_insensitive=True,
                    intents=discord.Intents.all())
 
+with open('data/settings.json', 'r', encoding='utf8') as SettingFile:
+    sf = json.load(SettingFile)
+
 
 @bot.event
 async def on_ready():
@@ -25,23 +28,19 @@ async def on_connect():
 @bot.command()
 async def load(ctx, ext):
     bot.load_extension(f'core.cogs.{ext}')
-    await ctx.send(f'{ext} loaded successfully.')
+    await ctx.send(f'```\n{ext} loaded successfully.\n```')
 
 
 @bot.command()
 async def unload(ctx, ext):
     bot.unload_extension(f'core.cogs.{ext}')
-    await ctx.send(f'{ext} unloaded successfully.')
+    await ctx.send(f'```\n{ext} unloaded successfully.\n```')
 
 
 @bot.command()
 async def reload(ctx, ext):
     bot.reload_extension(f'core.cogs.{ext}')
-    await ctx.send(f'{ext} reloaded successfully.')
-
-
-with open('data/settings.json', 'r', encoding='utf8') as SettingFile:
-    sf = json.load(SettingFile)
+    await ctx.send(f'```\n{ext} reloaded successfully.\n```')
 
 
 for cog in [p.stem for p in Path(".").glob("./core/cogs/*.py")]:
