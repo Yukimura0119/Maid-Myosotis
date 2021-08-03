@@ -1,9 +1,9 @@
 import discord
 from discord.ext import commands
-from core.ext import Cog_ext
+from core.ext import cog_ext
 
 
-class Main(Cog_ext):
+class Main(cog_ext):
 
     @commands.command()
     async def ping(self, ctx):

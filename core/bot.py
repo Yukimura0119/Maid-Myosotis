@@ -72,6 +72,7 @@ class YuKiTaN(commands.Bot):
         if not msg.author.bot:
             await self.process_commands(msg)
 
+
 @commands.command()
 async def load(self, ctx, ext):
     self.load_extension(f'cog.{ext}')
