@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from core.ext import cog_ext
+import datetime as dt
 
 
 class Main(cog_ext):
@@ -21,7 +22,8 @@ class Main(cog_ext):
     @commands.command()
     async def hello(self, ctx):
         embed = discord.Embed(title="Discord Robot YuKiTaN",
-                              description="Ya hello!!! My Name is YuKiTaN~~", color=0xfcc9b9)
+                              description="Ya hello!!! My Name is YuKiTaN~~", color=0xfcc9b9,
+                              timestamp=dt.datetime.utcnow())
         embed.set_author(name="YuKiTaN", url="https://github.com/Yukimura0119/DiscordBot_YuKiTaN",
                          icon_url="https://avatars.githubusercontent.com/u/35000486?v=4")
         embed.set_thumbnail(
