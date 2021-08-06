@@ -9,9 +9,6 @@ import json
 bot = commands.Bot(command_prefix='$', case_insensitive=True,
                    intents=discord.Intents.all())
 
-with open('data/settings.json', 'r', encoding='utf8') as SettingFile:
-    sf = json.load(SettingFile)
-
 
 @bot.event
 async def on_ready():
@@ -49,5 +46,7 @@ for cog in [p.stem for p in Path(".").glob("./core/cogs/*.py")]:
 print('Done.')
 
 
+with open('data/setting/secret.json', 'r', encoding='utf8') as jdata:
+    secret = json.load(jdata)
 print('YuKiTaN starting...')
-bot.run(sf['Authorization'], reconnect=True)
+bot.run(secret['Authorization'], reconnect=True)

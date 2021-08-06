@@ -129,4 +129,5 @@ dmypy.json
 .pyre/
 
 # something secret
-settings.json
+secret.json
+music

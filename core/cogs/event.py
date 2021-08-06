@@ -4,9 +4,6 @@ from discord.ext.commands import errors
 from core.ext import cog_ext
 import json
 
-with open('data/settings.json', 'r', encoding='utf8') as SettingFile:
-    sf = json.load(SettingFile)
-
 
 class Event(cog_ext):
     @commands.Cog.listener()

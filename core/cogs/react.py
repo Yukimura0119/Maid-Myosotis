@@ -7,11 +7,11 @@ import random
 
 class React(cog_ext):
     @commands.command()
-    async def pic(self, ctx, num=1):
-        pics = random.sample(
+    async def image(self, ctx, num=1):
+        imgs = random.sample(
             [p for p in Path(".").glob("./data/image/*")], num)
-        for pic in pics:
-            dcFile = discord.File(pic)
+        for img in imgs:
+            dcFile = discord.File(img)
             await ctx.send(file=dcFile)
 
 

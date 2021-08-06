@@ -17,7 +17,10 @@ class Main(cog_ext):
 
     @commands.command()
     async def purge(self, ctx, num: int):
-        await ctx.channel.purge(limit=num+1)
+        if ctx.message.author is ctx.guild.owner:
+            await ctx.channel.purge(limit=num+1)
+        else:
+            await ctx.send('```\nPermission denied.(Only the owner of guild can use this command)\n```')
 
     @commands.command()
     async def hello(self, ctx):
