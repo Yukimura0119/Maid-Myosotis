@@ -40,6 +40,14 @@ async def reload(ctx, ext):
     await ctx.send(f'```\n{ext} reloaded successfully.\n```')
 
 
+@bot.command()
+async def close(ctx):
+    if ctx.message.author.id == 304589833484107786:
+        await ctx.send('```\nBye bye.\n```')
+        await bot.close()
+    else:
+        await ctx.send('```\nPemission denied.(Only Yukimura0119 can use this commnad)\n```')
+
 for cog in [p.stem for p in Path(".").glob("./core/cogs/*.py")]:
     bot.load_extension(f'core.cogs.{cog}')
     print(f'Loaded {cog}.')

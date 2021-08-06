@@ -1,3 +1,4 @@
+from typing_extensions import get_args
 import discord
 from discord.ext import commands
 from core.ext import cog_ext
@@ -16,11 +17,16 @@ class Main(cog_ext):
         await ctx.send('```\n'+msg+'\n```')
 
     @commands.command()
-    async def purge(self, ctx, num: int):
-        if ctx.message.author is ctx.guild.owner:
-            await ctx.channel.purge(limit=num+1)
-        else:
-            await ctx.send('```\nPermission denied.(Only the owner of guild can use this command)\n```')
+    async def purge(self, ctx, num: int, mode='-m'):
+        if mode == '-m':
+            deleted = await ctx.channel.purge(limit=num+1, check=lambda message: message.author == ctx.author)
+            await ctx.send('```\nDelete {} message(s).\n```'.format(len(deleted)-1))
+        elif mode == '-u':
+            if ctx.author.guild_permissions.manage_messages:
+                deleted = await ctx.channel.purge(limit=num+1)
+                await ctx.send('```\nDelete {} message(s).\n```'.format(len(deleted)-1))
+            else:
+                await ctx.send('```\nPermission denied.You do not have the permission of managing messages.\n```')
 
     @commands.command()
     async def hello(self, ctx):

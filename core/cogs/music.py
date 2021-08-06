@@ -41,7 +41,7 @@ class Music(cog_ext):
         file = ydl.extract_info(url, download=False)
         title = file['title']
         vc.play(discord.FFmpegPCMAudio(file['url']))
-        await ctx.send(f'```\nNow playing {title}.\n```')
+        await ctx.send(f'```\nNow playing - {title}\n```')
 
     @ commands.command()
     async def resume(self, ctx):
