@@ -17,14 +17,14 @@ class Main(cog_ext):
         await ctx.send('```\n'+msg+'\n```')
 
     @commands.command()
-    async def purge(self, ctx, num: int, mode='-m'):
+    async def purge(self, ctx, num: int, mode='-u'):
         if mode == '-m':
             deleted = await ctx.channel.purge(limit=num+1, check=lambda message: message.author == ctx.author)
-            await ctx.send('```\nDelete {} message(s).\n```'.format(len(deleted)-1))
+            await ctx.send('```\nDelete {} message(s).\n```'.format(len(deleted)-1), delete_after=10)
         elif mode == '-u':
             if ctx.author.guild_permissions.manage_messages:
                 deleted = await ctx.channel.purge(limit=num+1)
-                await ctx.send('```\nDelete {} message(s).\n```'.format(len(deleted)-1))
+                await ctx.send('```\nDelete {} message(s).\n```'.format(len(deleted)-1), delete_after=10)
             else:
                 await ctx.send('```\nPermission denied.You do not have the permission of managing messages.\n```')
 

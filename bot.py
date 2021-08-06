@@ -6,6 +6,9 @@ from pathlib import Path
 import json
 
 
+with open('data/setting/secret.json', 'r', encoding='utf8') as jdata:
+    secret = json.load(jdata)
+
 bot = commands.Bot(command_prefix='$', case_insensitive=True,
                    intents=discord.Intents.all())
 
@@ -25,7 +28,7 @@ async def on_connect():
 @bot.command()
 async def load(ctx, ext):
     bot.load_extension(f'core.cogs.{ext}')
-    await ctx.send(f'```\n{ext} loaded successfully.\n```')
+    await ctx.send(f'```\n{ext} loaded successfully.\n```', delete_after=10)
 
 
 @bot.command()
@@ -42,7 +45,7 @@ async def reload(ctx, ext):
 
 @bot.command()
 async def close(ctx):
-    if ctx.message.author.id == 304589833484107786:
+    if ctx.message.author.id == secret['myID']:
         await ctx.send('```\nBye bye.\n```')
         await bot.close()
     else:
@@ -54,7 +57,5 @@ for cog in [p.stem for p in Path(".").glob("./core/cogs/*.py")]:
 print('Done.')
 
 
-with open('data/setting/secret.json', 'r', encoding='utf8') as jdata:
-    secret = json.load(jdata)
 print('YuKiTaN starting...')
 bot.run(secret['Authorization'], reconnect=True)
