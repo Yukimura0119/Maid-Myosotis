@@ -1,11 +1,13 @@
 import discord
 from discord.ext import commands
-from core.ext import cog_ext
+
 from pathlib import Path
 import random
 
+from core.ext import CogExtension
 
-class React(cog_ext):
+
+class React(CogExtension):
     @commands.command()
     async def image(self, ctx, num=1):
         imgs = random.sample(

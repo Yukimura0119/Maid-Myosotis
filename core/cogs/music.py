@@ -1,9 +1,10 @@
 import discord
 from discord.ext import commands
-from core.ext import cog_ext
+
 import youtube_dl
 import asyncio
-import os
+
+from core.ext import CogExtension
 
 ydl_opts = {
     'format': 'bestaudio/best',
@@ -21,8 +22,11 @@ ffmpeg_opts = {
 
 ydl = youtube_dl.YoutubeDL(ydl_opts)
 
+playlist = asyncio.Queue()
+song_name_list = asyncio.Queue()
 
-class Music(cog_ext):
+
+class Music(CogExtension):
 
     @commands.command()
     async def leave(self, ctx):

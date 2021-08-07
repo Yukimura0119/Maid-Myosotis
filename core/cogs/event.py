@@ -1,11 +1,10 @@
 import discord
 from discord.ext import commands
-from discord.ext.commands import errors
-from core.ext import cog_ext
-import json
+
+from core.ext import CogExtension
 
 
-class Event(cog_ext):
+class Event(CogExtension):
     @commands.Cog.listener()
     async def on_member_join(self, member):
         ch = member.guild.system_channel

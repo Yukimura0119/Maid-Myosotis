@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-from discord.flags import Intents
 
 from pathlib import Path
 import json
@@ -45,7 +44,7 @@ async def reload(ctx, ext):
 
 @bot.command()
 async def close(ctx):
-    if ctx.message.author.id == secret['myID']:
+    if ctx.message.author.id == int(secret['myID']):
         await ctx.send('```\nBye bye.\n```')
         await bot.close()
     else:

@@ -1,11 +1,12 @@
-from typing_extensions import get_args
 import discord
 from discord.ext import commands
-from core.ext import cog_ext
+
 import datetime as dt
 
+from core.ext import CogExtension
 
-class Main(cog_ext):
+
+class Main(CogExtension):
 
     @commands.command()
     async def ping(self, ctx):
