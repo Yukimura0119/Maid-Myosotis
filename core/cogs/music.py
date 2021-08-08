@@ -4,7 +4,7 @@ from discord.ext import commands
 import youtube_dl
 import asyncio
 
-from core.ext import CogExtension
+from extension.cog import CogExtension
 
 ydl_opts = {
     'format': 'bestaudio/best',
@@ -35,7 +35,7 @@ class Music(CogExtension):
     @commands.command()
     async def join(self, ctx):
         if ctx.voice_client is not None:
-            await ctx.voice_clientA.disconnect()
+            await ctx.voice_client.disconnect()
         ch = ctx.author.voice.channel
         await ch.connect()
 

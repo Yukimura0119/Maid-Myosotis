@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-from core.ext import CogExtension
+from extension.cog import CogExtension
 
 
 class Event(CogExtension):

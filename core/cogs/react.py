@@ -4,7 +4,7 @@ from discord.ext import commands
 from pathlib import Path
 import random
 
-from core.ext import CogExtension
+from extension.cog import CogExtension
 
 
 class React(CogExtension):

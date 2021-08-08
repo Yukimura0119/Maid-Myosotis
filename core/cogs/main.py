@@ -3,14 +3,15 @@ from discord.ext import commands
 
 import datetime as dt
 
-from core.ext import CogExtension
+from extension.cog import CogExtension
+import tools.message as msgManager
 
 
 class Main(CogExtension):
 
     @commands.command()
     async def ping(self, ctx):
-        await ctx.send(f'```\n{round(self.bot.latency*1000)} ms\n```')
+        await ctx.send(msgManager.codeblock(f'{round(self.bot.latency*1000)} ms'))
 
     @commands.command()
     async def say(self, ctx, *, msg):
