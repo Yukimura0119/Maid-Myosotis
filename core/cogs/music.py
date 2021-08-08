@@ -5,6 +5,7 @@ import youtube_dl
 import asyncio
 
 from extension.cog import CogExtension
+from tools import message
 
 ydl_opts = {
     'format': 'bestaudio/best',
@@ -45,22 +46,22 @@ class Music(CogExtension):
         file = ydl.extract_info(url, download=False)
         title = file['title']
         vc.play(discord.FFmpegPCMAudio(file['url']))
-        await ctx.send(f'```\nNow playing - {title}\n```')
+        await ctx.send(message.codeblock(f'Now playing - {title}'))
 
     @ commands.command()
     async def resume(self, ctx):
         ctx.voice_client.resume()
-        await ctx.send('```\nSong Resumed.\n```')
+        await ctx.send(message.codeblock('Song Resumed.'))
 
     @ commands.command()
     async def pause(self, ctx):
         ctx.voice_client.pause()
-        await ctx.send('```\nSong Paused.\n```')
+        await ctx.send(message.codeblock('Song Paused.'))
 
     @ commands.command()
     async def stop(self, ctx):
         ctx.voice_client.stop()
-        await ctx.send('```\nSong Stopped.\n```')
+        await ctx.send(message.codeblock('Song Stopped.'))
 
 
 def setup(bot):

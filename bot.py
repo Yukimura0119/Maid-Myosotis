@@ -4,6 +4,8 @@ from discord.ext import commands
 from pathlib import Path
 import json
 
+from tools import message
+
 
 with open('data/setting/secret.json', 'r', encoding='utf8') as jdata:
     secret = json.load(jdata)
@@ -27,28 +29,28 @@ async def on_connect():
 @bot.command()
 async def load(ctx, ext):
     bot.load_extension(f'core.cogs.{ext}')
-    await ctx.send(f'```\n{ext} loaded successfully.\n```', delete_after=10)
+    await ctx.send(message.codeblock(f'{ext} loaded successfully.'), delete_after=10)
 
 
 @bot.command()
 async def unload(ctx, ext):
     bot.unload_extension(f'core.cogs.{ext}')
-    await ctx.send(f'```\n{ext} unloaded successfully.\n```')
+    await ctx.send(message.codeblock(f'{ext} unloaded successfully.'))
 
 
 @bot.command()
 async def reload(ctx, ext):
     bot.reload_extension(f'core.cogs.{ext}')
-    await ctx.send(f'```\n{ext} reloaded successfully.\n```')
+    await ctx.send(message.codeblock(f'{ext} reloaded successfully.'))
 
 
 @bot.command()
 async def close(ctx):
     if ctx.message.author.id == int(secret['myID']):
-        await ctx.send('```\nBye bye.\n```')
+        await ctx.send(message.codeblock('Bye bye.'))
         await bot.close()
     else:
-        await ctx.send('```\nPemission denied.(Only Yukimura0119 can use this commnad)\n```')
+        await ctx.send(message.codeblock('Pemission denied.(Only Yukimura0119 can use this commnad)'))
 
 for cog in [p.stem for p in Path(".").glob("./core/cogs/*.py")]:
     bot.load_extension(f'core.cogs.{cog}')

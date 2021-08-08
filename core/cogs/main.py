@@ -4,31 +4,31 @@ from discord.ext import commands
 import datetime as dt
 
 from extension.cog import CogExtension
-import tools.message as msgManager
+from tools import message
 
 
 class Main(CogExtension):
 
     @commands.command()
     async def ping(self, ctx):
-        await ctx.send(msgManager.codeblock(f'{round(self.bot.latency*1000)} ms'))
+        await ctx.send(message.codeblock(f'{round(self.bot.latency*1000)} ms'))
 
     @commands.command()
     async def say(self, ctx, *, msg):
         await ctx.message.delete()
-        await ctx.send('```\n'+msg+'\n```')
+        await ctx.send(message.codeblock(msg))
 
     @commands.command()
     async def purge(self, ctx, num: int, mode='-u'):
         if mode == '-m':
             deleted = await ctx.channel.purge(limit=num+1, check=lambda message: message.author == ctx.author)
-            await ctx.send('```\nDelete {} message(s).\n```'.format(len(deleted)-1), delete_after=10)
+            await ctx.send(message.codeblock('Delete {} message(s).').format(len(deleted)-1), delete_after=10)
         elif mode == '-u':
             if ctx.author.guild_permissions.manage_messages:
                 deleted = await ctx.channel.purge(limit=num+1)
-                await ctx.send('```\nDelete {} message(s).\n```'.format(len(deleted)-1), delete_after=10)
+                await ctx.send(message.codeblock('Delete {} message(s).').format(len(deleted)-1), delete_after=10)
             else:
-                await ctx.send('```\nPermission denied.You do not have the permission of managing messages.\n```')
+                await ctx.send(message.codeblock('Permission denied.You do not have the permission of managing messages.'))
 
     @commands.command()
     async def hello(self, ctx):
