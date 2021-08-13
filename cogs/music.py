@@ -24,10 +24,23 @@ ffmpeg_opts = {
 ydl = youtube_dl.YoutubeDL(ydl_opts)
 
 playlist = asyncio.Queue()
-song_name_list = asyncio.Queue()
+next_song = asyncio.Event()
 
 
 class Music(CogExtension):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        async def audio_player_task():
+            while True:
+                next_song.clear()
+                current = await playlist.get()
+                print(current['title'])
+                self.voice_cleint[0].play(
+                    discord.FFmpegPCMAudio(current['url']), after=lambda x: self.bot.loop.call_soon_threadsafe(next_song.set))
+                await next_song.wait()
+        self.bg_task = self.bot.loop.create_task(audio_player_task())
 
     @commands.command()
     async def leave(self, ctx):
@@ -45,8 +58,9 @@ class Music(CogExtension):
         vc = ctx.voice_client
         file = ydl.extract_info(url, download=False)
         title = file['title']
-        vc.play(discord.FFmpegPCMAudio(file['url']))
-        await ctx.send(message.codeblock(f'Now playing - {title}'))
+        await playlist.put(file)
+        # vc.play(discord.FFmpegPCMAudio(file['url']))
+        await ctx.send(message.codeblock(f'ADD - {title}'))
 
     @ commands.command()
     async def resume(self, ctx):
