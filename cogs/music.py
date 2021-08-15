@@ -1,3 +1,4 @@
+from ssl import Options
 import discord
 from discord.ext import commands
 
@@ -17,7 +18,7 @@ ydl_opts = {
     }]
 }
 ffmpeg_opts = {
-    'before_options': '-nostdin',
+    "before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
     'options': '-vn'
 }
 
@@ -31,14 +32,15 @@ class Music(CogExtension):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.vc = None
 
         async def audio_player_task():
             while True:
                 next_song.clear()
                 current = await playlist.get()
                 print(current['title'])
-                self.voice_cleint[0].play(
-                    discord.FFmpegPCMAudio(current['url']), after=lambda x: self.bot.loop.call_soon_threadsafe(next_song.set))
+                self.vc.play(
+                    discord.FFmpegPCMAudio(current['url'], **ffmpeg_opts), after=lambda x: self.bot.loop.call_soon_threadsafe(next_song.set))
                 await next_song.wait()
         self.bg_task = self.bot.loop.create_task(audio_player_task())
 
@@ -52,6 +54,7 @@ class Music(CogExtension):
             await ctx.voice_client.disconnect()
         ch = ctx.author.voice.channel
         await ch.connect()
+        self.vc = ctx.voice_client
 
     @commands.command()
     async def play(self, ctx, url: str):
