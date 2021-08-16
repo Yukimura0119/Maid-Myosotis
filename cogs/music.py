@@ -7,8 +7,6 @@ import math
 import random
 import itertools
 
-from youtube_dl.utils import RegexNotFoundError
-
 from extension.cog import CogExtension
 from tools import message
 
@@ -59,28 +57,32 @@ class Music(CogExtension):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.vc = None
+        self.nowplaying = None
         self.playlist = SongList()
 
         async def audio_player_task():
             while True:
                 next_song.clear()
-                current = await self.playlist.get()
-                print(current['title'])
+                self.nowplaying = await self.playlist.get()
+                print(self.nowplaying['title'])
                 self.vc.play(
-                    discord.FFmpegPCMAudio(current['url'], **ffmpeg_opts), after=lambda x: self.bot.loop.call_soon_threadsafe(next_song.set))
+                    discord.FFmpegPCMAudio(self.nowplaying['url'], **ffmpeg_opts), after=lambda x: self.bot.loop.call_soon_threadsafe(next_song.set))
                 await next_song.wait()
         self.bg_task = self.bot.loop.create_task(audio_player_task())
 
     @commands.command()
     async def leave(self, ctx):
+        self.playlist.clear()
+        ctx.voice_client.stop()
         await ctx.voice_client.disconnect()
+        self.vc = None
 
     @commands.command()
     async def join(self, ctx):
         if ctx.voice_client is not None:
             await ctx.voice_client.disconnect()
         ch = ctx.author.voice.channel
-        await ctx.send(message.codeblock(f'connect to {ch}'))
+        await ctx.send(message.codeblock(f'Connect to {ch}!'))
         await ch.connect()
         self.vc = ctx.voice_client
 
@@ -89,34 +91,56 @@ class Music(CogExtension):
         if self.vc is None:
             await self.join(ctx)
         file = ydl.extract_info(url, download=False)
-        title = file['title']
         await self.playlist.put(file)
-        await ctx.send(message.codeblock(f'ADD - {title}'))
+        await ctx.send(message.codeblock('ADD - {}'.format(file['title'])))
 
     @ commands.command()
     async def resume(self, ctx):
         ctx.voice_client.resume()
-        await ctx.send(message.codeblock('Song Resumed.'))
+        await ctx.send(message.codeblock('Song Resumed!'))
 
     @ commands.command()
     async def pause(self, ctx):
         ctx.voice_client.pause()
-        await ctx.send(message.codeblock('Song Paused.'))
+        await ctx.send(message.codeblock('Song Paused!'))
 
     @ commands.command()
     async def skip(self, ctx):
         ctx.voice_client.stop()
-        await ctx.send(message.codeblock('Song Skipped.'))
+        await ctx.send(message.codeblock('Song Skipped!'))
 
     @commands.command()
     async def clear(self, ctx):
         self.playlist.clear()
-        await ctx.send(message.codeblock('Playlist cleared.'))
+        await ctx.send(message.codeblock('Playlist Cleared!'))
+
+    @ commands.command()
+    async def shuffle(self, ctx):
+        self.playlist.shuffle()
+        await ctx.send(message.codeblock('Playlist shuffled!'))
+
+    @commands.command()
+    async def np(self, ctx):
+        np = 'Now Playing : '
+        if self.nowplaying is None:
+            np += 'None'
+        else:
+            np += '[**{}**]({})'.format(
+                self.nowplaying['title'], self.nowplaying['webpage_url'])
+
+        embed = (discord.Embed(description=np, color=0xfcc9b9)
+                 .set_footer(text='{} song in queue'.format(len(self.playlist))))
+        await ctx.send(embed=embed)
 
     @ commands.command()
     async def queue(self, ctx, page: int = 1):
-        if len(self.playlist) == 0:
-            return await ctx.send('Empty queue.')
+
+        np = 'Now Playing : '
+        if self.nowplaying is None:
+            np += 'None'
+        else:
+            np += '[**{}**]({})'.format(
+                self.nowplaying['title'], self.nowplaying['webpage_url'])
 
         items_per_page = 10
         pages = math.ceil(len(self.playlist) / items_per_page)
@@ -125,10 +149,14 @@ class Music(CogExtension):
         end = start + items_per_page
 
         queue = ''
-        for i, song in enumerate(self.playlist[start:end], start=start):
-            queue += '`{}.` {}\n'.format(i + 1, song['title'])
+        if len(self.playlist) == 0:
+            queue += ('Empty queue.\n')
+        else:
+            for i, song in enumerate(self.playlist[start:end], start=start):
+                queue += '`{}.` [**{}**]({})\n'.format(i + 1,
+                                                       song['title'], song['webpage_url'])
 
-        embed = (discord.Embed(description='**{} tracks:**\n\n{}'.format(len(self.playlist), queue))
+        embed = (discord.Embed(description=np+'\n\n**{} tracks:**\n\n{}'.format(len(self.playlist), queue), color=0xfcc9b9)
                  .set_footer(text='Viewing page {}/{}'.format(page, pages)))
         await ctx.send(embed=embed)
 
