@@ -1,2 +1,2 @@
-# DiscordBot_YuKiTaN
+# Maid-Myosotis
 My First Project(so excited>&lt;)
