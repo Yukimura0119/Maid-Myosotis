@@ -17,13 +17,13 @@ bot = commands.Bot(command_prefix='$', case_insensitive=True,
 @bot.event
 async def on_ready():
     bot.client_id = (await bot.application_info()).id
-    print('>> YuKiTaN is on service <<')
+    print('>> Myosotis is on service <<')
 
 
 @bot.event
 async def on_connect():
     print(
-        f'YuKiTaN connected to Discord (latency: {round(bot.latency*1000)} ms).')
+        f'Myosotis connected to Discord (latency: {round(bot.latency*1000)} ms).')
 
 
 @bot.command()
@@ -58,5 +58,5 @@ for cog in [p.stem for p in Path(".").glob("./cogs/*.py")]:
 print('Done.')
 
 
-print('YuKiTaN starting...')
+print('Myosotis starting...')
 bot.run(secret['Authorization'], reconnect=True)
