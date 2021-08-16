@@ -63,6 +63,7 @@ class Music(CogExtension):
         async def audio_player_task():
             while True:
                 next_song.clear()
+                self.nowplaying = None
                 self.nowplaying = await self.playlist.get()
                 print(self.nowplaying['title'])
                 self.vc.play(
