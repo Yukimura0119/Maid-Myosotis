@@ -1,2 +1,3 @@
 # Maid-Myosotis
-My First Project(so excited>&lt;)
+
+A discord bot which has some funny functions!
