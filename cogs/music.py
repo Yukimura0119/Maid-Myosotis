@@ -6,6 +6,7 @@ import asyncio
 import math
 import random
 import itertools
+import functools
 
 from extension.cog import CogExtension
 from tools import message
@@ -91,6 +92,7 @@ class Music(CogExtension):
     async def play(self, ctx, url: str):
         if self.vc is None:
             await self.join(ctx)
+
         file = ydl.extract_info(url, download=False)
         await self.playlist.put(file)
         await ctx.send(message.codeblock('ADD - {}'.format(file['title'])))

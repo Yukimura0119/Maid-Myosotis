@@ -32,10 +32,10 @@ class Main(CogExtension):
 
     @commands.command()
     async def hello(self, ctx):
-        embed = discord.Embed(title="Discord Robot YuKiTaN",
-                              description="Ya hello!!! My Name is YuKiTaN~~", color=0xfcc9b9,
+        embed = discord.Embed(title="Maid Myosotis",
+                              description="Ya hello!!! My Name is Myosotis~~", color=0xfcc9b9,
                               timestamp=dt.datetime.utcnow())
-        embed.set_author(name="YuKiTaN", url="https://github.com/Yukimura0119/DiscordBot_YuKiTaN",
+        embed.set_author(name="Myosotis", url="https://github.com/Yukimura0119/Maid-Myosotis",
                          icon_url="https://avatars.githubusercontent.com/u/35000486?v=4")
         embed.set_thumbnail(
             url="https://avatars.githubusercontent.com/u/35000486?v=4")
@@ -47,7 +47,7 @@ class Main(CogExtension):
 
     @commands.command()
     async def website(self, ctx):
-        await ctx.send('Here is my website~\nhttps://github.com/Yukimura0119/DiscordBot_YuKiTaN')
+        await ctx.send('Here is my website~\nhttps://github.com/Yukimura0119/Maid-Myosotis')
 
 
 def setup(bot):

@@ -22,7 +22,7 @@ class Event(CogExtension):
 
     @commands.Cog.listener()
     async def on_message(self, msg):
-        if msg.content.lower() == 'yukitan' and msg.author != self.bot.user:
+        if msg.content.lower() == 'myosotis' and msg.author != self.bot.user:
             await msg.channel.send(message.codeblock('Nani?'))
 
     @commands.Cog.listener()
