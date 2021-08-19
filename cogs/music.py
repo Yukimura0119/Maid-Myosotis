@@ -76,6 +76,7 @@ class Music(CogExtension):
     async def leave(self, ctx):
         self.playlist.clear()
         ctx.voice_client.stop()
+        self.nowplaying = None
         await ctx.voice_client.disconnect()
         self.vc = None
 
@@ -92,10 +93,24 @@ class Music(CogExtension):
     async def play(self, ctx, url: str):
         if self.vc is None:
             await self.join(ctx)
+        loop = asyncio.get_event_loop()
+        partial = functools.partial(
+            ydl.extract_info, url, download=False, process=False)
+        file = await loop.run_in_executor(None, partial)
 
-        file = ydl.extract_info(url, download=False)
-        await self.playlist.put(file)
-        await ctx.send(message.codeblock('ADD - {}'.format(file['title'])))
+        if 'entries' in file:
+            cnt = 0
+            for song in file['entries']:
+                cnt += 1
+                song_info = ydl.extract_info(
+                    'https://www.youtube.com/watch?v='+song['url'], download=False)
+                await self.playlist.put(song_info)
+                await asyncio.sleep(5)
+            await ctx.send(message.codeblock('ADD {} songs'.format(cnt)))
+        else:
+            song = ydl.extract_info(file['webpage_url'], download=False)
+            await self.playlist.put(song)
+            await ctx.send(message.codeblock('ADD - {}'.format(song['title'])))
 
     @ commands.command()
     async def resume(self, ctx):
@@ -115,6 +130,8 @@ class Music(CogExtension):
     @commands.command()
     async def clear(self, ctx):
         self.playlist.clear()
+        ctx.voice_client.stop()
+        self.nowplaying = None
         await ctx.send(message.codeblock('Playlist Cleared!'))
 
     @ commands.command()
